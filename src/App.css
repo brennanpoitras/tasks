@@ -13,6 +13,12 @@
     }
 }
 
+#rectangle{
+    width: 500px;
+    height: 100px;
+    background-color: red;
+}
+
 .App-header {
     width: 100%;
     background-color: #2FA719;
