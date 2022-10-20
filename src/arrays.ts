@@ -69,7 +69,7 @@ export const shoutIfExclaiming = (messages: string[]): string[] => {
     );
 
     const shouted = uppers.filter(
-        (word: string): boolean => word.charAt(word.length - 1) == "?"
+        (word: string): boolean => !word.endsWith("?")
     );
 
     return shouted;
@@ -82,7 +82,7 @@ export const shoutIfExclaiming = (messages: string[]): string[] => {
 export function countShortWords(words: string[]): number {
     let counter = 0;
 
-    const otherWords = words.map((word: string): number =>
+    words.map((word: string): number =>
         word.length < 4 ? counter++ : counter
     );
 
@@ -116,22 +116,13 @@ export function allRGB(colors: string[]): boolean {
  */
 export function makeMath(addends: number[]): string {
     const sum = addends.reduce(
-        (total: number, currentNum: number) => total + currentNum, 0
+        (total: number, currentNum: number) => total + currentNum,
+        0
     );
-    const sumString = addends.toString();
-    let newString = "";
-    for (let i = 0; i < sumString.length; i++) {
-        if (sumString[i] == ",") {
-            newString += "+";
-        } else {
-            newString += sumString[i];
-        }
+    if (addends.length == 0) {
+        return sum.toString() + "=0";
     }
-    if (sumString.length == 0) {
-        newString = "0";
-    }
-
-    return sum.toString() + "=" + newString;
+    return sum.toString() + "=" + addends.join("+");
 }
 
 /**
@@ -144,5 +135,28 @@ export function makeMath(addends: number[]): string {
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
  */
 export function injectPositive(values: number[]): number[] {
-    return [];
+    const anyNegatives = values.some((num: number): boolean => num < 0);
+    if (anyNegatives) {
+        const firstNegative = values.findIndex(
+            (num: number): boolean => num < 0
+        );
+        const sum = [...values]
+            .splice(0, firstNegative)
+            .reduce((a, b) => a + b, 0);
+
+        const newArray = [...values];
+        newArray.splice(firstNegative + 1, 0, sum);
+        return newArray;
+    } else {
+        const sum = values.reduce(
+            (total: number, currentNum: number) => total + currentNum,
+            0
+        );
+        console.log(sum);
+        const newArray = [...values];
+        console.log(newArray);
+        newArray.splice(values.length, 0, sum);
+        console.log(newArray);
+        return newArray;
+    }
 }
