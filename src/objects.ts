@@ -10,7 +10,16 @@ export function makeBlankQuestion(
     name: string,
     type: QuestionType
 ): Question {
-    return {};
+    return {
+        id: id,
+        name: name,
+        type: type,
+        body: "",
+        expected: "",
+        options: [],
+        points: 1,
+        published: false
+    };
 }
 
 /**
@@ -21,7 +30,9 @@ export function makeBlankQuestion(
  * HINT: Look up the `trim` and `toLowerCase` functions.
  */
 export function isCorrect(question: Question, answer: string): boolean {
-    return false;
+    return (
+        answer.toLowerCase().trim() == question.expected.toLowerCase().trim()
+    );
 }
 
 /**
@@ -31,7 +42,17 @@ export function isCorrect(question: Question, answer: string): boolean {
  * be exactly one of the options.
  */
 export function isValid(question: Question, answer: string): boolean {
-    return false;
+    if (question.type == "short_answer_question") {
+        return true;
+    }
+    if (question.type == "multiple_choice_question") {
+        if (question.options.includes(answer)) {
+            return true;
+        }
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -41,7 +62,10 @@ export function isValid(question: Question, answer: string): boolean {
  * name "My First Question" would become "9: My First Q".
  */
 export function toShortForm(question: Question): string {
-    return "";
+    const firstPart = question.id.toString();
+    const separator = ": ";
+    const lastPart = question.name.substring(0, 10);
+    return firstPart + separator + lastPart;
 }
 
 /**
@@ -62,6 +86,27 @@ export function toShortForm(question: Question): string {
  * Check the unit tests for more examples of what this looks like!
  */
 export function toMarkdown(question: Question): string {
+    if (question.type == "short_answer_question") {
+        return "# " + question.name + "\n" + question.body;
+    }
+
+    if (question.type == "multiple_choice_question") {
+        return (
+            "# " +
+            question.name +
+            "\n" +
+            question.body +
+            "\n" +
+            "- " +
+            question.options[0] +
+            "\n" +
+            "- " +
+            question.options[1] +
+            "\n" +
+            "- " +
+            question.options[2]
+        );
+    }
     return "";
 }
 

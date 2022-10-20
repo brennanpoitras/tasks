@@ -152,11 +152,8 @@ export function injectPositive(values: number[]): number[] {
             (total: number, currentNum: number) => total + currentNum,
             0
         );
-        console.log(sum);
         const newArray = [...values];
-        console.log(newArray);
         newArray.splice(values.length, 0, sum);
-        console.log(newArray);
         return newArray;
     }
 }
