@@ -38,7 +38,9 @@ export function StartAttempt(): JSX.Element {
                 <Button disabled={inProg || attempt < 1} onClick={startQuiz}>
                     Start Quiz
                 </Button>
-                <Button onClick={incAttempt}>Mulligan</Button>
+                <Button disabled={inProg} onClick={incAttempt}>
+                    Mulligan
+                </Button>
             </div>
             <div>Attempts Left: {attempt}</div>
         </div>
