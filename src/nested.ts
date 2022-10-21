@@ -1,5 +1,7 @@
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
+import { makeBlankQuestion } from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
@@ -59,7 +61,6 @@ export function findQuestion(
     );
 
     const y = newQuestions.find((z: Question): boolean => z.id === id);
-    console.log(y);
     if (y == undefined) {
         return null;
     }
@@ -146,7 +147,21 @@ id,name,options,points,published
  * Check the unit tests for more examples!
  */
 export function toCSV(questions: Question[]): string {
-    return "";
+    const newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            options: [...x.options]
+        })
+    );
+
+    const firstLine = "id,name,options,points,published\n";
+    const newCSV = newQuestions
+        .map(
+            (question: Question): string =>
+                `${question.id},${question.name},${question.options.length},${question.points},${question.published}`
+        )
+        .join("\n");
+    return firstLine + newCSV;
 }
 
 /**
@@ -155,7 +170,21 @@ export function toCSV(questions: Question[]): string {
  * making the `text` an empty string, and using false for both `submitted` and `correct`.
  */
 export function makeAnswers(questions: Question[]): Answer[] {
-    return [];
+    const newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            options: [...x.options]
+        })
+    );
+    const answerList = newQuestions.map(
+        (question: Question): Answer => ({
+            questionId: question.id,
+            text: "",
+            submitted: false,
+            correct: false
+        })
+    );
+    return answerList;
 }
 
 /***
@@ -163,7 +192,14 @@ export function makeAnswers(questions: Question[]): Answer[] {
  * each question is now published, regardless of its previous published status.
  */
 export function publishAll(questions: Question[]): Question[] {
-    return [];
+    const newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            options: [...x.options],
+            published: true
+        })
+    );
+    return newQuestions;
 }
 
 /***
@@ -171,7 +207,21 @@ export function publishAll(questions: Question[]): Question[] {
  * are the same type. They can be any type, as long as they are all the SAME type.
  */
 export function sameType(questions: Question[]): boolean {
-    return false;
+    const newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            options: [...x.options]
+        })
+    );
+
+    if (questions.length == 0) {
+        return true;
+    }
+    const firstType = newQuestions[0].type;
+    const allSame = newQuestions.every(
+        (question: Question): boolean => question.type == firstType
+    );
+    return allSame;
 }
 
 /***
@@ -185,7 +235,9 @@ export function addNewQuestion(
     name: string,
     type: QuestionType
 ): Question[] {
-    return [];
+    const blank = makeBlankQuestion(id, name, type);
+    const newArray = [...questions, blank];
+    return newArray;
 }
 
 /***
@@ -198,6 +250,17 @@ export function renameQuestionById(
     targetId: number,
     newName: string
 ): Question[] {
+
+    let newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            options: [...x.options]
+        })
+    );
+
+    newQuestions = newQuestions.map(
+        (x: Question): Question => x.id == targetId ? x.name = newName :
+    );
     return [];
 }
 
