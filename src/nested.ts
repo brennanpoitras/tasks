@@ -1,7 +1,8 @@
 import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
+import { urlToHttpOptions } from "url";
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
-import { makeBlankQuestion } from "./objects";
+import { duplicateQuestion, makeBlankQuestion } from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
@@ -250,18 +251,14 @@ export function renameQuestionById(
     targetId: number,
     newName: string
 ): Question[] {
-
-    let newQuestions = questions.map(
+    const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
-            options: [...x.options]
+            options: [...x.options],
+            name: x.id == targetId ? newName : x.name
         })
     );
-
-    newQuestions = newQuestions.map(
-        (x: Question): Question => x.id == targetId ? x.name = newName :
-    );
-    return [];
+    return newQuestions;
 }
 
 /***
@@ -276,7 +273,19 @@ export function changeQuestionTypeById(
     targetId: number,
     newQuestionType: QuestionType
 ): Question[] {
-    return [];
+    const newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            type: x.id == targetId ? newQuestionType : x.type,
+
+            options:
+                x.id == targetId &&
+                newQuestionType != "multiple_choice_question"
+                    ? []
+                    : [...x.options]
+        })
+    );
+    return newQuestions;
 }
 
 /**
@@ -295,7 +304,20 @@ export function editOption(
     targetOptionIndex: number,
     newOption: string
 ): Question[] {
-    return [];
+    const newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            options:
+                x.id == targetId
+                    ? targetOptionIndex == -1
+                        ? [...x.options, newOption]
+                        : x.options.map((y: string, current: number): string =>
+                            targetOptionIndex == current ? newOption : y
+                        )
+                    : [...x.options]
+        })
+    );
+    return newQuestions;
 }
 
 /***
@@ -309,5 +331,20 @@ export function duplicateQuestionInArray(
     targetId: number,
     newId: number
 ): Question[] {
+    const newQuestions = questions.map(
+        (x: Question): Question => ({
+            ...x,
+            options: [...x.options]
+        })
+    );
+    const oldQuestion = findQuestion(questions, targetId);
+    if (oldQuestion != null) {
+        const duplicate = duplicateQuestion(newId, oldQuestion);
+        const index = newQuestions.findIndex(
+            (question: Question): boolean => question.id == targetId
+        );
+        newQuestions.splice(index + 1, 0, duplicate);
+        return newQuestions;
+    }
     return [];
 }
