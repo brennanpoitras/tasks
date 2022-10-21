@@ -1,14 +1,17 @@
+
 import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { urlToHttpOptions } from "url";
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
 import { duplicateQuestion, makeBlankQuestion } from "./objects";
 
+
 /**
  * Consumes an array of questions and returns a new array with only the questions
  * that are `published`.
  */
 export function getPublishedQuestions(questions: Question[]): Question[] {
+
     let newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -29,6 +32,7 @@ export function getPublishedQuestions(questions: Question[]): Question[] {
  * `expected`, and an empty array for its `options`.
  */
 export function getNonEmptyQuestions(questions: Question[]): Question[] {
+
     let newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -54,6 +58,7 @@ export function findQuestion(
     questions: Question[],
     id: number
 ): Question | null {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -73,6 +78,7 @@ export function findQuestion(
  * with the given `id`.
  */
 export function removeQuestion(questions: Question[], id: number): Question[] {
+
     let newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -92,6 +98,7 @@ export function removeQuestion(questions: Question[], id: number): Question[] {
  * questions, as an array.
  */
 export function getNames(questions: Question[]): string[] {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -107,6 +114,7 @@ export function getNames(questions: Question[]): string[] {
  * Consumes an array of questions and returns the sum total of all their points added together.
  */
 export function sumPoints(questions: Question[]): number {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -125,6 +133,7 @@ export function sumPoints(questions: Question[]): number {
  * Consumes an array of questions and returns the sum total of the PUBLISHED questions.
  */
 export function sumPublishedPoints(questions: Question[]): number {
+
     const published = getPublishedQuestions(questions);
     const sum = sumPoints(published);
     return sum;
@@ -148,6 +157,7 @@ id,name,options,points,published
  * Check the unit tests for more examples!
  */
 export function toCSV(questions: Question[]): string {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -171,6 +181,7 @@ export function toCSV(questions: Question[]): string {
  * making the `text` an empty string, and using false for both `submitted` and `correct`.
  */
 export function makeAnswers(questions: Question[]): Answer[] {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -193,6 +204,7 @@ export function makeAnswers(questions: Question[]): Answer[] {
  * each question is now published, regardless of its previous published status.
  */
 export function publishAll(questions: Question[]): Question[] {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -208,6 +220,7 @@ export function publishAll(questions: Question[]): Question[] {
  * are the same type. They can be any type, as long as they are all the SAME type.
  */
 export function sameType(questions: Question[]): boolean {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -236,9 +249,11 @@ export function addNewQuestion(
     name: string,
     type: QuestionType
 ): Question[] {
+
     const blank = makeBlankQuestion(id, name, type);
     const newArray = [...questions, blank];
     return newArray;
+
 }
 
 /***
@@ -251,6 +266,7 @@ export function renameQuestionById(
     targetId: number,
     newName: string
 ): Question[] {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -273,6 +289,7 @@ export function changeQuestionTypeById(
     targetId: number,
     newQuestionType: QuestionType
 ): Question[] {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
@@ -286,6 +303,7 @@ export function changeQuestionTypeById(
         })
     );
     return newQuestions;
+
 }
 
 /**
@@ -303,6 +321,7 @@ export function editOption(
     targetId: number,
     targetOptionIndex: number,
     newOption: string
+
 ): Question[] {
     const newQuestions = questions.map(
         (x: Question): Question => ({
@@ -331,6 +350,7 @@ export function duplicateQuestionInArray(
     targetId: number,
     newId: number
 ): Question[] {
+
     const newQuestions = questions.map(
         (x: Question): Question => ({
             ...x,
