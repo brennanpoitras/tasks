@@ -1,4 +1,4 @@
-export function isValid(password: string): boolean {
+export function isValidPass(password: string): boolean {
     function checkLength(): boolean {
         //Checks the password length
         return password.length == 16;
