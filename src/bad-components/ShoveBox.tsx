@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-
+///
 interface setShoveProps {
     position: number;
     setPosition: (x: number) => void;
