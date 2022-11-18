@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
-const colors = [
+import { Form, FormCheck } from "react-bootstrap";
+const COLORS = [
     "red",
     "blue",
     "yellow",
@@ -12,112 +12,49 @@ const colors = [
 ];
 
 export function ChangeColor(): JSX.Element {
-    const [color, setColor] = useState<string>("");
+    const [currentColor, setCurrentColor] = useState<string>("");
 
     function updateColor(event: React.ChangeEvent<HTMLInputElement>) {
-        setColor(event.target.value);
+        setCurrentColor(event.target.value);
     }
 
+    function SelectedColor(): JSX.Element {
+        return (
+            <div>
+                You have chosen{" "}
+                <div
+                    data-testid="colored-box"
+                    style={{ backgroundColor: currentColor }}
+                >
+                    {currentColor}
+                </div>
+            </div>
+        );
+    }
     return (
         <div>
             <h3>Change Color</h3>
             <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-red"
-                    label="Red"
-                    value="Red"
-                    checked={color === "Red"}
-                    inline={true}
-                />
+                <Form.Group controlId="favoriteColors">
+                    {COLORS.map((color: string) => (
+                        <FormCheck
+                            key={color}
+                            type="radio"
+                            name="color"
+                            onChange={updateColor}
+                            id="color-check-color"
+                            label={color}
+                            value={color}
+                            checked={currentColor === color}
+                            inline={true}
+                            style={{ backgroundColor: color }}
+                        />
+                    ))}
+                </Form.Group>
             </div>
             <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-blue"
-                    label="Blue"
-                    value="Blue"
-                    checked={color === "Blue"}
-                    inline={true}
-                />
+                <SelectedColor></SelectedColor>
             </div>
-            <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-yellow"
-                    label="Yellow"
-                    value="Yellow"
-                    checked={color === "Yellow"}
-                    inline={true}
-                />
-            </div>
-            <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-orange"
-                    label="Orange"
-                    value="Orange"
-                    checked={color === "Orange"}
-                    inline={true}
-                />
-            </div>
-            <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-green"
-                    label="Green"
-                    value="Green"
-                    checked={color === "Green"}
-                    inline={true}
-                />
-            </div>
-            <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-purple"
-                    label="Purple"
-                    value="Purple"
-                    checked={color === "Purple"}
-                    inline={true}
-                />
-            </div>
-            <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-black"
-                    label="Black"
-                    value="Black"
-                    checked={color === "Black"}
-                    inline={true}
-                />
-            </div>
-            <div>
-                <Form.Check
-                    type="radio"
-                    name="colors"
-                    onChange={updateColor}
-                    id="color-check-turquoise"
-                    label="Turquoise"
-                    value="Turquoise"
-                    checked={color === "Turquoise"}
-                    inline={true}
-                />
-            </div>
-            <div>You have chosen {color}</div>
         </div>
     );
 }
